@@ -1,0 +1,50 @@
+# --- secrets / local config (never commit) ---
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*.pfx
+*.p12
+*.token
+secrets.json
+credentials.json
+
+# --- local data / databases ---
+*.db
+*.sqlite
+*.sqlite3
+data/
+runtime-data/
+*.log
+
+# --- build output ---
+dist/
+build/
+out/
+bin/
+obj/
+target/
+*.egg-info/
+*.tsbuildinfo
+
+# --- caches / venvs ---
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+.pytest-tmp/
+.test-tmp/
+node_modules/
+coverage/
+htmlcov/
+
+# --- editors / OS ---
+.vs/
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db

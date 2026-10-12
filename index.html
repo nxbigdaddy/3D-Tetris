@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext y='26' font-size='26'%3E%F0%9F%A7%B1%3C/text%3E%3C/svg%3E" />
+  <title>3D 俄罗斯方块 · Blockout 式</title>
+</head>
+<body>
+  <canvas id="scene"></canvas>
+
+  <header id="hud">
+    <div class="stat">
+      <span class="k">分数</span>
+      <span class="v" id="score">0</span>
+    </div>
+    <div class="stat">
+      <span class="k">消层</span>
+      <span class="v" id="layers">0</span>
+    </div>
+    <div class="stat">
+      <span class="k">等级</span>
+      <span class="v" id="level">1</span>
+    </div>
+    <div class="stat">
+      <span class="k">最高分</span>
+      <span class="v" id="best">0</span>
+    </div>
+    <div class="stat">
+      <span class="k">模式</span>
+      <span class="v" id="mode">经典</span>
+    </div>
+    <div class="stat">
+      <span class="k">下一个</span>
+      <span class="v" id="next">—</span>
+    </div>
+    <div class="actions">
+      <button id="pause" type="button">暂停 (P)</button>
+      <button id="restart" type="button">重开 (R)</button>
+      <button id="mute" type="button">音效开 (M)</button>
+      <button id="modeButton" type="button">模式:经典 (1/2)</button>
+      <button id="camera" type="button">视角复位</button>
+    </div>
+  </header>
+
+  <!-- 各层填充率:三维版最缺的信息就是「哪一层快满了」 -->
+  <aside id="layersPanel" aria-label="各层填充率">
+    <div class="layersTitle">各层填充</div>
+    <div id="layersBars"></div>
+  </aside>
+
+  <footer id="legend">
+    <span><b>← →</b> 左右</span>
+    <span><b>↑ ↓</b> 前后</span>
+    <span><b>Q E</b> 偏航</span>
+    <span><b>W S</b> 俯仰</span>
+    <span><b>A D</b> 翻滚</span>
+    <span><b>空格</b> 硬降</span>
+    <span><b>Shift</b> 加速下落</span>
+    <span><b>拖拽</b> 转视角 · <b>滚轮</b> 缩放</span>
+  </footer>
+
+  <!--
+    屏幕按键:手机上键盘不可用,没有这套按钮就完全玩不了。
+    只在「粗指针」(触屏)或窄屏上显示,桌面端保持清爽。
+    注意这些按钮和键盘**走同一条动作通道**(main.js 里的 ACTIONS),不是两套逻辑。
+  -->
+  <div id="touchPad" aria-label="屏幕按键">
+    <div class="padGroup">
+      <button type="button" data-action="left" aria-label="左移">←</button>
+      <button type="button" data-action="forward" aria-label="前移">↑</button>
+      <button type="button" data-action="back" aria-label="后移">↓</button>
+      <button type="button" data-action="right" aria-label="右移">→</button>
+    </div>
+    <div class="padGroup">
+      <button type="button" data-action="yawLeft" aria-label="左偏航">Q</button>
+      <button type="button" data-action="yawRight" aria-label="右偏航">E</button>
+      <button type="button" data-action="pitchUp" aria-label="上俯仰">W</button>
+      <button type="button" data-action="pitchDown" aria-label="下俯仰">S</button>
+      <button type="button" data-action="rollLeft" aria-label="左翻滚">A</button>
+      <button type="button" data-action="rollRight" aria-label="右翻滚">D</button>
+    </div>
+    <div class="padGroup">
+      <button type="button" class="wide" data-action="hardDrop" aria-label="硬降">硬降</button>
+      <button type="button" data-action="pause" aria-label="暂停">暂停</button>
+    </div>
+  </div>
+
+  <div id="toast" class="hidden"></div>
+
+  <div id="overlay" class="hidden">
+    <div class="panel">
+      <h1 id="overlayTitle">3D 俄罗斯方块</h1>
+      <p id="overlayText">填满一整个水平层才能消除。方块可以绕三个轴旋转。</p>
+      <button id="overlayButton" type="button">开始</button>
+    </div>
+  </div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

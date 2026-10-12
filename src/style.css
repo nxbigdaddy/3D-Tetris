@@ -1,0 +1,287 @@
+﻿:root {
+  --bg: #0a0e18;
+  --panel: rgba(14, 20, 34, 0.86);
+  --ink: #e8f0ff;
+  --dim: #8ba3c7;
+  --accent: #7fb0ff;
+  --good: #7ee0a8;
+  --danger: #ff7b7b;
+}
+
+* { box-sizing: border-box; }
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: "PingFang SC", "Microsoft YaHei", system-ui, -apple-system, sans-serif;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+#scene {
+  position: fixed;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+  cursor: grab;
+}
+
+#scene:active { cursor: grabbing; }
+
+#hud {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 3;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 22px;
+  padding: 14px 18px 12px;
+  background: linear-gradient(180deg, rgba(6, 10, 20, 0.92), rgba(6, 10, 20, 0));
+  pointer-events: none;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 64px;
+}
+
+.stat .k {
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  color: var(--dim);
+}
+
+.stat .v {
+  font-size: 22px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.actions {
+  margin-left: auto;
+  display: flex;
+  gap: 8px;
+  pointer-events: auto;
+}
+
+.actions button {
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(127, 176, 255, 0.4);
+  background: var(--panel);
+  color: var(--ink);
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.actions button:hover { border-color: var(--accent); }
+
+/* 各层填充率:三维版最缺的信息 —— 哪一层快满了 */
+#layersPanel {
+  position: fixed;
+  left: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 3;
+  width: 108px;
+  padding: 10px 10px 8px;
+  border-radius: 12px;
+  background: var(--panel);
+  border: 1px solid rgba(127, 176, 255, 0.22);
+}
+
+.layersTitle {
+  font-size: 11px;
+  color: var(--dim);
+  letter-spacing: 0.12em;
+  margin-bottom: 6px;
+}
+
+#layersBars {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 2px;
+}
+
+.layerRow {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.layerRow .idx {
+  width: 16px;
+  font-size: 9px;
+  color: var(--dim);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.layerRow .bar {
+  flex: 1;
+  height: 8px;
+  border-radius: 4px;
+  background: rgba(127, 176, 255, 0.12);
+  overflow: hidden;
+}
+
+.layerRow .fill {
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg, #4f8fd0, #7fb0ff);
+  transition: width 0.12s linear;
+}
+
+/* 满层的行高亮 —— 这就是「马上要消了」的信号 */
+.layerRow.full .fill { background: linear-gradient(90deg, #ffd166, #ffe9a8); }
+.layerRow.full .idx { color: #ffd166; }
+
+#legend {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 3;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 14px;
+  padding: 10px 14px 12px;
+  font-size: 12px;
+  color: var(--dim);
+  background: linear-gradient(0deg, rgba(6, 10, 20, 0.9), rgba(6, 10, 20, 0));
+  pointer-events: none;
+}
+
+#legend b { color: var(--ink); }
+
+#toast {
+  position: fixed;
+  left: 50%;
+  top: 22%;
+  transform: translateX(-50%);
+  z-index: 4;
+  padding: 10px 18px;
+  border-radius: 12px;
+  background: var(--panel);
+  border: 1px solid rgba(127, 176, 255, 0.3);
+  font-size: 15px;
+  white-space: nowrap;
+  transition: opacity 0.25s;
+  pointer-events: none;
+}
+
+#overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(6, 10, 20, 0.72);
+  backdrop-filter: blur(3px);
+}
+
+#overlay .panel {
+  width: min(520px, 88vw);
+  padding: 26px 28px;
+  border-radius: 16px;
+  background: var(--panel);
+  border: 1px solid rgba(127, 176, 255, 0.28);
+  text-align: center;
+}
+
+#overlay h1 {
+  margin: 0 0 10px;
+  font-size: 24px;
+}
+
+#overlay p {
+  margin: 0 0 18px;
+  color: var(--dim);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+#overlay button {
+  padding: 10px 22px;
+  border-radius: 10px;
+  border: 1px solid var(--accent);
+  background: rgba(127, 176, 255, 0.16);
+  color: var(--ink);
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.hidden { display: none !important; }
+
+@media (max-width: 760px), (max-height: 560px) {
+  #hud { gap: 12px; padding: 10px 12px 8px; }
+  .stat { min-width: 46px; }
+  .stat .k { font-size: 9px; }
+  .stat .v { font-size: 16px; }
+  #layersPanel { width: 78px; padding: 8px; }
+  .layerRow .bar { height: 6px; }
+  #legend { gap: 8px; font-size: 10px; padding: 8px; }
+}
+
+/* 屏幕按键:只在「粗指针」(触屏)或窄屏上出现,桌面端保持清爽 */
+#touchPad {
+  display: none;
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 44px;
+  z-index: 4;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  pointer-events: none;
+}
+
+#touchPad .padGroup {
+  display: flex;
+  gap: 6px;
+  pointer-events: auto;
+}
+
+#touchPad button {
+  min-width: 46px;
+  height: 42px;
+  padding: 0 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(127, 176, 255, 0.45);
+  background: rgba(14, 20, 34, 0.82);
+  color: var(--ink);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  /* 手机上点按不要有 300ms 延迟与高亮残留 */
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+#touchPad button:active {
+  background: rgba(127, 176, 255, 0.3);
+  border-color: var(--accent);
+}
+
+#touchPad button.wide { min-width: 96px; }
+
+@media (pointer: coarse), (max-width: 900px) {
+  #touchPad { display: flex; }
+  /* 有屏幕按键时,底部的按键说明让位(手机上也没人看键盘图例) */
+  #legend { display: none; }
+  #layersPanel { top: 42%; }
+}
